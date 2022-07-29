@@ -1,9 +1,11 @@
-# MERN Stack CRUD
+# Cilist
 Simple CRUD app built with MySQL, ExpressJS, React, & Node.
 
-Database    : MySQL
-Backend     : localhost:5000
-Frontend    : localhost:3000
+`Database    : MySQL`
+
+`Backend     : localhost:5000`
+
+`Frontend    : localhost:3000`
 
 # Setup
 

@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Banner from "./Banner";
 
 const AddUser = () => {
+  useEffect(() => {
+    document.title = 'Cilist - Add User';
+  }, []);
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [gender, setGender] = useState("Male");

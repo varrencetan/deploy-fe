@@ -7,8 +7,14 @@ const UserList = () => {
   const [users, setUser] = useState([]);
 
   useEffect(() => {
+    document.title = 'Cilist';
     getUsers();
   }, []);
+
+  useEffect(() => {
+    
+  });
+
 
   const getUsers = async () => {
     const response = await axios.get("http://localhost:5000/users");
