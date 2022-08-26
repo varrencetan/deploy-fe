@@ -32,6 +32,15 @@ mysql -u people -p people < database/crud_db.sql
 
 ## Backend
 
+Create .env file. Configure with appropriate value.
+
+```
+cd backend
+```
+```
+cp .env.example .env
+```
+
 Simply install all dependencies then start the app.
 ```
 npm install
@@ -42,6 +51,15 @@ npm start
 ```
 
 ## Frontend
+
+Create .env file. Configure with appropriate value.
+
+```
+cd frontend
+```
+```
+cp .env.example .env
+```
 
 Because this is a React app, you can install all dependencies.
 ```
