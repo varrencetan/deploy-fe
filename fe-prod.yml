@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fe-prod
+  namespace: prod
+spec:
+  selector:
+    app: fe-prod
+  ports:
+  - port: 3000
+    targetPort: 80
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fe-prod
+  namespace: prod
+spec:
+  selector:
+    matchLabels:
+      app: fe-prod
+  template:
+    metadata:
+      labels:
+        app: fe-prod
+    spec:
+      containers:
+      - name: fe-prod
+        image: varrence/multistageprod-fe:PLACEHOLDER
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-fe-prod
+  namespace: prod
+  annotations:
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "server: hide";
+      more_set_headers "X-Powered-By: cilsy";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "X-Frame-Options: SAMEORIGIN";
+      more_set_headers "X-Xss-Protection: 1; mode=block";
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: 8m
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: '*'
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+#    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:ap-southeast-1:389364182454:certificate/b9d1f89d-b3e6-48c4-9741-4c7a6754a48e
+#    nginx.ingress.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:ap-southeast-1:389364182454:certificate/b9d1f89d-b3e6-48c4-9741-4c7a6754a48e
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: fe-prod.cilsy.my.id
+    http:
+      paths:
+      - pathType: ImplementationSpecific
+        path: /
+        backend:
+          service:
+            name: fe-prod
+            port:
+              number: 3000
+  tls:
+    - hosts:
+        - fe-prod.cilsy.my.id
+      secretName: wildcard-varrence
+
